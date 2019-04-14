@@ -1,7 +1,7 @@
 <template>
   <div style="margin-bottom:20px">
     <el-menu
-      :default-active="activeIndex2"
+      :default-active="activeIndex"
       class="el-menu-demo"
       mode="horizontal"
       @select="handleSelect"
@@ -10,8 +10,8 @@
       active-text-color="#ffd04b"
     >
       <el-menu-item index="1">任务列表</el-menu-item>
-      <el-menu-item index="2">设置中心</el-menu-item>
-      <el-menu-item index="3">备用</el-menu-item>
+      <el-menu-item index="2">新增任务</el-menu-item>
+      <el-menu-item index="3">镜像包库</el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -19,12 +19,18 @@
 export default {
   data() {
     return {
-      activeIndex: "1",
-      activeIndex2: "1"
+      activeIndex: "1"
     };
   },
   methods: {
     handleSelect(key, keyPath) {
+      if (key == 1) {
+        this.$router.push("/");
+      } else if (key == 2) {
+        this.$router.push("/addjob");
+      }else if (key == 3) {
+        this.$router.push("/package");
+      }
       console.log(key, keyPath);
     }
   }
