@@ -104,7 +104,7 @@ export default {
         describe: "",
         version: "",
         path: this.ruleForm.registry,
-        push: this.ruleForm.pushpath
+        push: this.ruleForm.pushpath,
       };
       this.tableData.push(list);
     },

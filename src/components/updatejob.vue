@@ -80,10 +80,13 @@
               size="mini"
               type="success"
               @click="clickPackage(scope.row)"
-              v-bind:disabled="packageButShow"
+              v-bind:disabled="scope.row.package_click"
             >
-              {{packageBut}}
-              <i class="el-icon-loading" v-show="packageButShow" style="width:25px"></i>
+              <i
+                class="el-icon-loading"
+                v-show="scope.row.package_click"
+                style="width:25px"
+              ></i>
             </el-button>
             <el-button size="mini" type="danger" @click="clickUpdate(scope.row.id)">删除</el-button>
             <el-button size="mini" type="primary" @click="clickUpdate(scope.row.id)">保存</el-button>
@@ -99,7 +102,6 @@
 export default {
   data() {
     return {
-      packageBut: "打包",
       packageButShow: false,
       tableData: [],
       selectlistRow: [],
@@ -133,12 +135,10 @@ export default {
         _self.tableData.forEach(v => {
           if (v.id == msg.id) {
             if (msg.status == "success") {
-              _self.packageButShow = false;
-              _self.packageBut = "打包";
+              v.package_click = false;
               _self.errorPackage("镜像 " + msg.name + "  打包成功!");
             } else if (msg.status == "err") {
-              _self.packageButShow = false;
-              _self.packageBut = "打包";
+              v.package_click = false;
               _self.errorPackage("打包失败,请检查镜像地址信息!");
             } else {
             }
@@ -148,8 +148,7 @@ export default {
     },
     //打包
     clickPackage(row) {
-      this.packageBut = "";
-      this.packageButShow = true;
+      row.package_click = true
       var arr = [];
       if (row) {
         arr.push(row);
@@ -162,7 +161,7 @@ export default {
         .post(url, arr)
         .then(response => {})
         .catch(function(response) {
-          alert(response.body.errMsg);
+          console.log(response.body.errMsg);
         });
     },
     //获取数据
@@ -186,6 +185,9 @@ export default {
               //     ":" +
               //     value.version;
               // });
+              response.body.data.images.forEach(e => {
+                e.package_click = false;
+              });
               this.tableData = response.body.data.images;
               console.log(this.tableData);
             }
@@ -205,9 +207,12 @@ export default {
     addRow() {
       var list = {
         rowNum: this.tableData.length + 1,
+        path: "",
+        push: "",
         name: "",
         describe: "",
-        version: ""
+        version: "",
+        package_click: false
       };
       console.log(list);
       this.tableData.push(list);
