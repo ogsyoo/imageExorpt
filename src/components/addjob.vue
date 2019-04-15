@@ -10,6 +10,12 @@
       <el-form-item label="项目名称：" prop="projectname" style="text-align:left">
         <el-input v-model="ruleForm.projectname" style="width:50%;float:left;"></el-input>
       </el-form-item>
+      <el-form-item label="下载地址：" prop="registry" style="text-align:left">
+        <el-input v-model="ruleForm.registry" style="width:50%;float:left;"></el-input>
+      </el-form-item>
+      <el-form-item label="推送地址：" prop="pushpath" style="text-align:left">
+        <el-input v-model="ruleForm.pushpath" style="width:50%;float:left;"></el-input>
+      </el-form-item>
       <el-form-item label="项目描述：" prop="describe" style="text-align:left">
         <el-input v-model="ruleForm.describe" style="width:50%;float:left;"></el-input>
         <el-button
@@ -41,19 +47,24 @@
             <el-input v-model="scope.row.path"></el-input>
           </template>
         </el-table-column>
+        <el-table-column label="推送地址" align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.push"></el-input>
+          </template>
+        </el-table-column>
         <el-table-column label="镜像名称" align="center">
           <template slot-scope="scope">
             <el-input v-model="scope.row.name"></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="描述" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.describe"></el-input>
-          </template>
-        </el-table-column>
         <el-table-column label="版本号">
           <template slot-scope="scope">
             <el-input v-model="scope.row.version"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column label="描述" align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.describe"></el-input>
           </template>
         </el-table-column>
       </el-table>
@@ -66,6 +77,7 @@
 </template>
 
 <script>
+import services from "@/services";
 export default {
   data() {
     return {
@@ -74,6 +86,8 @@ export default {
       ruleForm: {
         projectname: "",
         describe: "",
+        registry:"hub.wodcloud.com",
+        pushpath:"reg.local:5000"
       }
     };
   },
@@ -89,9 +103,9 @@ export default {
         name: "",
         describe: "",
         version: "",
-        path:""
+        path: this.ruleForm.registry,
+        push: this.ruleForm.pushpath
       };
-      console.log(list);
       this.tableData.push(list);
     },
     // 删除方法
@@ -126,7 +140,7 @@ export default {
         images: this.tableData
       };
       console.log(project_iamges);
-      var url = "http://localhost:8081/export/project";
+      var url = services.api + "/export/project";
       this.$http
         .post(url, project_iamges)
         .then(response => {

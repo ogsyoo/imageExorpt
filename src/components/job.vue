@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import services from "@/services"
 export default {
   data() {
     return {
@@ -47,7 +48,7 @@ export default {
         this.$router.push("/updatejob/"+id);
     },
     getList() {
-      var url = "http://localhost:8081/export/project/list";
+      var url = services.api+"/export/project/list";
       this.$http
         .get(url)
         .then(response => {
@@ -60,7 +61,7 @@ export default {
           }
         })
         .catch(function(response) {
-          alert(response.body.errMsg);
+          console.log(response.body.errMsg);
         });
     },
     detail(pid) {

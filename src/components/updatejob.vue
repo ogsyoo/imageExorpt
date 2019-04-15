@@ -10,6 +10,12 @@
       <el-form-item label="项目名称：" prop="projectname" style="text-align:left">
         <el-input v-model="ruleForm.projectname" style="width:50%;float:left;"></el-input>
       </el-form-item>
+      <el-form-item label="下载地址：" prop="registry" style="text-align:left">
+        <el-input v-model="ruleForm.registry" style="width:50%;float:left;"></el-input>
+      </el-form-item>
+      <el-form-item label="推送地址：" prop="pushpath" style="text-align:left">
+        <el-input v-model="ruleForm.pushpath" style="width:50%;float:left;"></el-input>
+      </el-form-item>
       <el-form-item label="项目描述：" prop="describe" style="text-align:left">
         <el-input v-model="ruleForm.describe" style="width:50%;float:left;"></el-input>
         <el-button
@@ -48,14 +54,14 @@
             <el-input v-model="scope.row.path"></el-input>
           </template>
         </el-table-column>
+        <el-table-column label="推送地址" align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.push"></el-input>
+          </template>
+        </el-table-column>
         <el-table-column label="镜像名称" align="center">
           <template slot-scope="scope">
             <el-input v-model="scope.row.name"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column label="描述" align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.describe"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="版本号">
@@ -63,9 +69,19 @@
             <el-input v-model="scope.row.version"></el-input>
           </template>
         </el-table-column>
+        <el-table-column label="描述" align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.describe"></el-input>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="success" @click="clickPackage(scope.row)" v-bind:disabled="packageButShow">
+            <el-button
+              size="mini"
+              type="success"
+              @click="clickPackage(scope.row)"
+              v-bind:disabled="packageButShow"
+            >
               {{packageBut}}
               <i class="el-icon-loading" v-show="packageButShow" style="width:25px"></i>
             </el-button>
