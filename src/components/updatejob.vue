@@ -82,11 +82,8 @@
               @click="clickPackage(scope.row)"
               v-bind:disabled="scope.row.package_click"
             >
-              <i
-                class="el-icon-loading"
-                v-show="scope.row.package_click"
-                style="width:25px"
-              ></i>
+              打包
+              <i class="el-icon-loading" v-show="scope.row.package_click" style="width:25px"></i>
             </el-button>
             <el-button size="mini" type="danger" @click="clickUpdate(scope.row.id)">删除</el-button>
             <el-button size="mini" type="primary" @click="clickUpdate(scope.row.id)">保存</el-button>
@@ -148,7 +145,7 @@ export default {
     },
     //打包
     clickPackage(row) {
-      row.package_click = true
+      row.package_click = true;
       var arr = [];
       if (row) {
         arr.push(row);
@@ -196,7 +193,7 @@ export default {
           }
         })
         .catch(function(response) {
-          alert(response.body.errMsg);
+          console.log(response.body.errMsg);
         });
     },
     // 获取表格选中时的数据
@@ -256,17 +253,17 @@ export default {
         .then(response => {
           console.log(response);
           if (response.body.success == 1 || response.status != 200) {
-            alert(response.body.data);
+            console.log(response.body.data);
           } else {
-            alert(response.body.errMsg);
+            console.log(response.body.errMsg);
           }
         })
         .catch(function(response) {
-          alert(response.body.errMsg);
+          console.log(response.body.errMsg);
         });
       //   this.$refs[formName].validate(valid => {
       //     if (valid) {
-      //       alert("submit!");
+      //       console.log("submit!");
       //     } else {
       //       console.log("error submit!!");
       //       return false;
