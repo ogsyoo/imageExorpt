@@ -48,7 +48,7 @@ export default {
         this.$router.push("/updatejob/"+id);
     },
     getList() {
-      var url = services.api+"/export/project/list";
+      var url = services.api+"/project/list";
       this.$http
         .get(url)
         .then(response => {

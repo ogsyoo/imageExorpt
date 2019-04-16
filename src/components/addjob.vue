@@ -140,7 +140,7 @@ export default {
         images: this.tableData
       };
       console.log(project_iamges);
-      var url = services.api + "/export/project";
+      var url = services.api + "/project";
       this.$http
         .post(url, project_iamges)
         .then(response => {
