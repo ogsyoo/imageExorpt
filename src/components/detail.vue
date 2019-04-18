@@ -46,11 +46,11 @@
         <span>{{ gridData }}</span>
       </el-dialog>-->
     </div>
-   
   </div>
 </template>
 
 <script>
+import services from "@/services";
 export default {
   data() {
     return {
@@ -74,12 +74,12 @@ export default {
   methods: {
     getImageList() {
       var url =
-        "http://localhost:8081/export/project/images/" + this.$route.params.pid;
+        services.api + "/project/images/" + this.$route.params.pid;
       this.$http
         .get(url)
         .then(response => {
           if (response.body.success == 1) {
-            console.log()
+            console.log();
             if (response.body.data.images.length > 0) {
               this.tableData = response.body.data.images;
             }
@@ -100,7 +100,7 @@ export default {
       this.image.id = row.id;
     },
     updateImage() {
-      var url = "http://localhost:8081/export/image";
+      var url = services.api + "/image";
       this.$http
         .put(url, this.image)
         .then(response => {
@@ -120,7 +120,7 @@ export default {
         });
     },
     delImage(id) {
-      var url = "http://localhost:8081/export/image/" + id;
+      var url = services.api + "/image/" + id;
       this.$http
         .delete(url, this.image)
         .then(response => {

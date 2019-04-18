@@ -7,14 +7,14 @@
       style="width: 100%;margin:0px"
       class="demo-ruleForm"
     >
-      <el-form-item label="项目名称：" prop="projectname" style="text-align:left">
-        <el-input v-model="ruleForm.projectname" style="width:50%;float:left;"></el-input>
+      <el-form-item label="项目名称：" prop="name" style="text-align:left">
+        <el-input v-model="ruleForm.name" style="width:50%;float:left;"></el-input>
       </el-form-item>
       <el-form-item label="下载地址：" prop="registry" style="text-align:left">
         <el-input v-model="ruleForm.registry" style="width:50%;float:left;"></el-input>
       </el-form-item>
-      <el-form-item label="推送地址：" prop="pushpath" style="text-align:left">
-        <el-input v-model="ruleForm.pushpath" style="width:50%;float:left;"></el-input>
+      <el-form-item label="推送地址：" prop="push" style="text-align:left">
+        <el-input v-model="ruleForm.push" style="width:50%;float:left;"></el-input>
       </el-form-item>
       <el-form-item label="项目描述：" prop="describe" style="text-align:left">
         <el-input v-model="ruleForm.describe" style="width:50%;float:left;"></el-input>
@@ -85,8 +85,8 @@
               打包
               <i class="el-icon-loading" v-show="scope.row.package_click" style="width:25px"></i>
             </el-button>
-            <el-button size="mini" type="danger" @click="clickUpdate(scope.row.id)">删除</el-button>
-            <el-button size="mini" type="primary" @click="clickUpdate(scope.row.id)">保存</el-button>
+            <el-button size="mini" type="danger" @click="delRow(scope.row.id)">删除</el-button>
+            <el-button size="mini" type="primary" @click="submitForm(scope.row)">保存</el-button>
             <el-button size="mini" type="primary" @click="clickUpdate(scope.row.id)">推送</el-button>
           </template>
         </el-table-column>
@@ -96,6 +96,7 @@
 </template>
 
 <script>
+import services from "@/services";
 export default {
   data() {
     return {
@@ -103,9 +104,10 @@ export default {
       tableData: [],
       selectlistRow: [],
       ruleForm: {
-        projectname: "",
+        name: "",
         describe: "",
-        registry: ""
+        registry: "",
+        push: ""
       }
     };
   },
@@ -122,9 +124,7 @@ export default {
       });
     },
     init() {
-      var e1 = new EventSource(
-        "http://localhost:8081/export/sse/event/images_package"
-      );
+      var e1 = new EventSource(services.api + "/sse/event/images_package");
       var _self = this;
       e1.onmessage = function(event) {
         var msg = JSON.parse(event.data);
@@ -153,7 +153,7 @@ export default {
         arr = this.selectlistRow;
       }
       console.log(arr);
-      var url = "http://localhost:8081/export/image/package";
+      var url = services.api + "/image/package";
       this.$http
         .post(url, arr)
         .then(response => {})
@@ -163,16 +163,14 @@ export default {
     },
     //获取数据
     getProjectList() {
-      var url =
-        "http://localhost:8081/export/project/images/" + this.$route.params.id;
+      var url = services.api + "/project/images/" + this.$route.params.id;
       this.$http
         .get(url)
         .then(response => {
           console.log(response.body);
           if (response.body.success == 1) {
-            this.ruleForm.projectname = response.body.data.project.name;
-            this.ruleForm.describe = response.body.data.project.describe;
-            this.ruleForm.registry = response.body.data.project.registry;
+            this.ruleForm = response.body.data.project;
+            console.log("ruleForm", this.ruleForm);
             if (response.body.data.images.length > 0) {
               // response.body.data.images.forEach(function(value, i) {
               //   value.path =
@@ -204,8 +202,8 @@ export default {
     addRow() {
       var list = {
         rowNum: this.tableData.length + 1,
-        path: "",
-        push: "",
+        path: this.ruleForm.registry,
+        push: this.ruleForm.push,
         name: "",
         describe: "",
         version: "",
@@ -213,6 +211,17 @@ export default {
       };
       console.log(list);
       this.tableData.push(list);
+    },
+    delRow(id) {
+      var url = services.api + "/image/" + id;
+      this.$http
+        .delete(url)
+        .then(response => {
+          alert("删除成功")
+        })
+        .catch(function(response) {
+          console.log(response.body.errMsg);
+        });
     },
     // 删除方法
     // 删除选中行
@@ -237,17 +246,18 @@ export default {
       // 删除完数据之后清除勾选框
       this.$refs.tableData.clearSelection();
     },
-    submitForm() {
+    submitForm(row) {
       var project_iamges = {
         project: {
+          id: this.ruleForm.id,
           name: this.ruleForm.projectname,
           describe: this.ruleForm.describe,
           registry: this.ruleForm.registry
         },
-        images: this.tableData
+        images: []
       };
-      console.log(project_iamges);
-      var url = "http://localhost:8081/export/project";
+      project_iamges.images.push(row);
+      var url = services.api + "/project";
       this.$http
         .post(url, project_iamges)
         .then(response => {

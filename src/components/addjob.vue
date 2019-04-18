@@ -86,8 +86,8 @@ export default {
       ruleForm: {
         projectname: "",
         describe: "",
-        registry:"hub.wodcloud.com",
-        pushpath:"reg.local:5000"
+        registry: "hub.wodcloud.com",
+        pushpath: "reg.local:5000"
       }
     };
   },
@@ -104,7 +104,7 @@ export default {
         describe: "",
         version: "",
         path: this.ruleForm.registry,
-        push: this.ruleForm.pushpath,
+        push: this.ruleForm.pushpath
       };
       this.tableData.push(list);
     },
@@ -135,7 +135,9 @@ export default {
       var project_iamges = {
         project: {
           name: this.ruleForm.projectname,
-          describe: this.ruleForm.describe
+          describe: this.ruleForm.describe,
+          registry: this.ruleForm.registry,
+          push: this.ruleForm.pushpath
         },
         images: this.tableData
       };

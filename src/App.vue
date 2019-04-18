@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- <headers/> -->
+    <headers/>
     <div style="margin:20px;border:1px solid #E4E7ED;padding:20px">
     <router-view/>
     </div>
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-// import header from "@/components/header";
+import header from "@/components/header";
 
 export default {
   name: "App",
@@ -16,7 +16,7 @@ export default {
   //   source: String
   // },
   components: {
-    // headers: header
+    headers: header
   }
 };
 </script>

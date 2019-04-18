@@ -5,6 +5,7 @@
 
 
 <script>
+import services from "@/services"
 export default {
   data() {
     return {
@@ -16,7 +17,7 @@ export default {
   },
   methods: {
     test: function() {
-      var e1 = new EventSource("http://localhost:8081/export/sse/event/message");
+      var e1 = new EventSource(services.api + "/sse/event/message");
       e1.onerror=function(e){
           e1.close()
       };
